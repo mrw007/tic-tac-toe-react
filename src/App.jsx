@@ -22,6 +22,10 @@ function deriveActivePlayer(gameTurns) {
 }
 
 function App() {
+  const [players, setPlayers] = useState({
+    X: "Player 1",
+    O: "Player 2",
+  });
   const [gameTurns, setGameTurns] = useState([]);
   const activePlayer = deriveActivePlayer(gameTurns);
 
@@ -48,7 +52,7 @@ function App() {
       firstSquareSymbol === secondSquareSymbol &&
       firstSquareSymbol === thirdSquareSymbol
     ) {
-      winner = firstSquareSymbol;
+      winner = players[firstSquareSymbol];
     }
   }
 
@@ -65,6 +69,12 @@ function App() {
     });
   }
 
+  function handlePlayerNameChange(playerSymbol, newName) {
+    setPlayers((previousPlayers) => {
+      return { ...previousPlayers, [playerSymbol]: newName };
+    });
+  }
+
   function handleRestart() {
     setGameTurns([]);
   }
@@ -74,14 +84,16 @@ function App() {
       <div id="game-container">
         <ol id="players" className="highlight-player">
           <Player
-            initialName="Player 1"
+            initialName={players.X}
             symbol="X"
             isActive={activePlayer === "X"}
+            onNameChange={handlePlayerNameChange}
           />
           <Player
-            initialName="Player 2"
+            initialName={players.O}
             symbol="O"
             isActive={activePlayer === "O"}
+            onNameChange={handlePlayerNameChange}
           />
         </ol>
         {(winner || hasDraw) && (
